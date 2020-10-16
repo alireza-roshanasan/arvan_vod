@@ -114,12 +114,6 @@ if args.mode == "list":
     up = UploadVideo(args.channel)
     up.GetChannelVideos()
 elif args.dir:
-    files = [
-        os.path.join(root, name)
-        for root, dirs, files in os.walk("./")
-        for name in files
-        if name.endswith((args.postfix))
-    ]
     for f in os.listdir(args.dir):
         f = os.path.join("./", args.dir, f)
         if f.endswith(args.postfix):
