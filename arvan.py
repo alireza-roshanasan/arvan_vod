@@ -6,11 +6,14 @@ import os
 import magic
 import requests
 from dotenv import load_dotenv
-#TODO add description for arguments
+from requests.models import PreparedRequest
+
+# TODO add description for arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--channel", required=True)
 parser.add_argument("-m", "--mode", required=False)
 parser.add_argument("-cm", "--convert_mode", required=False)
+parser.add_argument("-g", "--per_page", required=False)
 parser.add_argument("-t", "--title", required=False)
 parser.add_argument("-f", "--file", required=False)
 parser.add_argument("-o", "--out", required=False)
@@ -50,7 +53,10 @@ class UploadVideo:
         headers = {
             "Authorization": self.key,
         }
-        res = requests.get(url, headers=headers)
+        params = {"per_page": args.per_page if args.per_page else 1000}
+        req = PreparedRequest()
+        req.prepare_url(url, params)
+        res = requests.get(req.url, headers=headers)
         print(json.dumps(res.json(), indent=4, sort_keys=True, ensure_ascii=False))
         if args.out:
             with open(args.out, "w+", encoding="utf-8") as out:
